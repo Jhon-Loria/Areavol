@@ -1,0 +1,108 @@
+@MiAreaVol_HostAddress = http://localhost:5098
+
+GET {{MiAreaVol_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+### MiAreaVol API - Ejemplos de Uso
+
+### 1. Calcular área de un cuadrado
+POST {{baseUrl}}/api/area/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "cuadrado",
+  "nombre": "Cuadrado de prueba",
+  "lado": 5.0
+}
+
+### 2. Calcular área de un rectángulo
+POST {{baseUrl}}/api/area/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "rectangulo",
+  "nombre": "Rectángulo de prueba",
+  "largo": 10.0,
+  "ancho": 5.0
+}
+
+### 3. Calcular área de un círculo
+POST {{baseUrl}}/api/area/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "circulo",
+  "nombre": "Círculo de prueba",
+  "radio": 3.0
+}
+
+### 4. Calcular área de un triángulo
+POST {{baseUrl}}/api/area/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "triangulo",
+  "nombre": "Triángulo de prueba",
+  "base": 6.0,
+  "altura": 4.0
+}
+
+### 5. Obtener historial de áreas
+GET {{baseUrl}}/api/area/historial
+
+### 6. Obtener figuras soportadas para área
+GET {{baseUrl}}/api/area/figuras-soportadas
+
+### 7. Calcular volumen de un cubo
+POST {{baseUrl}}/api/volumen/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "cubo",
+  "nombre": "Cubo de prueba",
+  "lado": 4.0
+}
+
+### 8. Calcular volumen de un cilindro
+POST {{baseUrl}}/api/volumen/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "cilindro",
+  "nombre": "Cilindro de prueba",
+  "radio": 2.0,
+  "altura": 8.0
+}
+
+### 9. Calcular volumen de una esfera
+POST {{baseUrl}}/api/volumen/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "esfera",
+  "nombre": "Esfera de prueba",
+  "radio": 3.0
+}
+
+### 10. Calcular volumen de un paralelepípedo
+POST {{baseUrl}}/api/volumen/calcular
+Content-Type: application/json
+
+{
+  "tipoFigura": "paralelepipedo",
+  "nombre": "Paralelepípedo de prueba",
+  "largo": 5.0,
+  "ancho": 3.0,
+  "altura": 2.0
+}
+
+### 11. Obtener historial de volúmenes
+GET {{baseUrl}}/api/volumen/historial
+
+### 12. Obtener figuras soportadas para volumen
+GET {{baseUrl}}/api/volumen/figuras-soportadas
+
+### Variables de entorno
+@baseUrl = https://localhost:7001
