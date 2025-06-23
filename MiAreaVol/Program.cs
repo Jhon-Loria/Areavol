@@ -124,17 +124,12 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-var enableSwagger = builder.Configuration.GetValue<bool>("EnableSwagger");
-
-if (app.Environment.IsDevelopment() || enableSwagger)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiAreaVol API V1");
-        c.RoutePrefix = "swagger";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiAreaVol API V1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 
