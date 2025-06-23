@@ -63,10 +63,10 @@ Una vez que la aplicación esté corriendo:
 ### Estado de la Base de Datos
 ```bash
 curl http://localhost:5098/api/seeder/status
-```
 
-**Debería mostrar:**
-```json
+
+
+
 {
   "areas": 100,
   "volumenes": 100,
