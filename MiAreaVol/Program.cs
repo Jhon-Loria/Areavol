@@ -67,12 +67,12 @@ builder.Services.AddSwaggerGen(c =>
     // Configurar Swagger para usar JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Ingrese 'Bearer' [espacio] y luego su token en el cuadro de texto a continuación.\r\n\r\nEjemplo: \"Bearer 12345abcdef\""
+        Description = "Por favor, ingrese el token JWT",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement

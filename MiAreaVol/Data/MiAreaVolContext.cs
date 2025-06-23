@@ -23,7 +23,6 @@ public class MiAreaVolContext : DbContext
             entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
             entity.Property(e => e.TipoFigura).IsRequired().HasMaxLength(50);
             entity.Property(e => e.Resultado).HasPrecision(18, 6);
-            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
             
             // Configuraciones específicas para MySQL
             entity.ToTable("CalculosArea");
@@ -35,7 +34,6 @@ public class MiAreaVolContext : DbContext
             entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
             entity.Property(e => e.TipoFigura).IsRequired().HasMaxLength(50);
             entity.Property(e => e.Resultado).HasPrecision(18, 6);
-            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
             
             // Configuraciones específicas para MySQL
             entity.ToTable("CalculosVolumen");
