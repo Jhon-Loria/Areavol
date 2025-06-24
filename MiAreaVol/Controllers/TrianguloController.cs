@@ -16,8 +16,8 @@ namespace MiAreaVol.Controllers
         [HttpGet] public IActionResult Get() => Ok(_service.GetAll());
         [HttpGet("{id}")] public IActionResult Get(int id)
             => _service.GetById(id) is Triangulo t ? Ok(t) : NotFound();
-        [HttpPost] public IActionResult Post(Triangulo t) => Ok(_service.Create(t));
-        [HttpPut("{id}")] public IActionResult Put(int id, Triangulo t)
+        [HttpPost] public IActionResult Post([FromBody] Triangulo t) => Ok(_service.Create(t));
+        [HttpPut("{id}")] public IActionResult Put(int id, [FromBody] Triangulo t)
             => _service.Update(id, t) ? Ok() : NotFound();
         [HttpDelete("{id}")] public IActionResult Delete(int id)
             => _service.Delete(id) ? Ok() : NotFound();

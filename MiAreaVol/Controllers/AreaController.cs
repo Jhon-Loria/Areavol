@@ -238,7 +238,11 @@ public class AreaController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post(CalculoAreaRequest request) { ... }
+    public IActionResult Post(CalculoAreaRequest request)
+    {
+        // Implementación o eliminar si no es necesario
+        return BadRequest("No implementado");
+    }
 }
 
 public class Circulo
