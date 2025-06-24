@@ -236,6 +236,9 @@ public class AreaController : ControllerBase
 
         return Ok(figuras);
     }
+
+    [HttpPost]
+    public IActionResult Post(CalculoAreaRequest request) { ... }
 }
 
 public class Circulo
