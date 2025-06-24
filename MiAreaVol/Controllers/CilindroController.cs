@@ -1,21 +1,25 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiAreaVol.Models;
-using System;
+using MiAreaVol.Services;
 
 namespace MiAreaVol.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("api/cilindro")]
+    [Route("api/[controller]")]
     public class CilindroController : ControllerBase
     {
-        [HttpPost("calcular-volumen")]
-        public ActionResult<double> CalcularVolumen([FromBody] CalculoVolumenRequest request)
-        {
-            if (request.Radio == null || request.Altura == null)
-                return BadRequest("Se requieren los parámetros 'radio' y 'altura'.");
+        private readonly CilindroService _service;
+        public CilindroController(CilindroService service) => _service = service;
 
-            double volumen = Math.PI * Math.Pow(request.Radio.Value, 2) * request.Altura.Value;
-            return Ok(volumen);
-        }
+        [HttpGet] public IActionResult Get() => Ok(_service.GetAll());
+        [HttpGet("{id}")] public IActionResult Get(int id)
+            => _service.GetById(id) is Cilindro c ? Ok(c) : NotFound();
+        [HttpPost] public IActionResult Post(Cilindro c) => Ok(_service.Create(c));
+        [HttpPut("{id}")] public IActionResult Put(int id, Cilindro c)
+            => _service.Update(id, c) ? Ok() : NotFound();
+        [HttpDelete("{id}")] public IActionResult Delete(int id)
+            => _service.Delete(id) ? Ok() : NotFound();
     }
 } 

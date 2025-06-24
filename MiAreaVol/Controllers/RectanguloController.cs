@@ -1,20 +1,25 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiAreaVol.Models;
+using MiAreaVol.Services;
 
 namespace MiAreaVol.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("api/rectangulo")]
+    [Route("api/[controller]")]
     public class RectanguloController : ControllerBase
     {
-        [HttpPost("calcular")]
-        public ActionResult<double> CalcularArea([FromBody] CalculoAreaRequest request)
-        {
-            if (request.Largo == null || request.Ancho == null)
-                return BadRequest("Se requieren los parámetros 'largo' y 'ancho'.");
+        private readonly RectanguloService _service;
+        public RectanguloController(RectanguloService service) => _service = service;
 
-            double area = request.Largo.Value * request.Ancho.Value;
-            return Ok(area);
-        }
+        [HttpGet] public IActionResult Get() => Ok(_service.GetAll());
+        [HttpGet("{id}")] public IActionResult Get(int id)
+            => _service.GetById(id) is Rectangulo r ? Ok(r) : NotFound();
+        [HttpPost] public IActionResult Post(Rectangulo r) => Ok(_service.Create(r));
+        [HttpPut("{id}")] public IActionResult Put(int id, Rectangulo r)
+            => _service.Update(id, r) ? Ok() : NotFound();
+        [HttpDelete("{id}")] public IActionResult Delete(int id)
+            => _service.Delete(id) ? Ok() : NotFound();
     }
 } 

@@ -236,4 +236,23 @@ public class AreaController : ControllerBase
 
         return Ok(figuras);
     }
+}
+
+public class Circulo
+{
+    public int Id { get; set; }
+    public double Radio { get; set; }
+    public double Circunferencia => 2 * Math.PI * Radio;
+    public double Area => Math.PI * Math.Pow(Radio, 2);
+}
+
+namespace MiAreaVol.Models
+{
+    public class Triangulo
+    {
+        public int Id { get; set; }
+        public double Base { get; set; }
+        public double Altura { get; set; }
+        public double Area => (Base * Altura) / 2;
+    }
 } 
