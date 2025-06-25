@@ -21,5 +21,7 @@ namespace MiAreaVol.Controllers
             => _service.Update(id, t) ? Ok() : NotFound();
         [HttpDelete("{id}")] public IActionResult Delete(int id)
             => _service.Delete(id) ? Ok() : NotFound();
+        [HttpGet("paginado")] public IActionResult GetPaged(int pageNumber = 1, int pageSize = 10)
+            => Ok(_service.GetPaged(pageNumber, pageSize));
     }
 } 

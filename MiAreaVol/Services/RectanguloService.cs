@@ -32,5 +32,9 @@ namespace MiAreaVol.Services
             _rectangulos.Remove(r);
             return true;
         }
+        public IEnumerable<Rectangulo> GetPaged(int pageNumber, int pageSize)
+        {
+            return _rectangulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
     }
 } 

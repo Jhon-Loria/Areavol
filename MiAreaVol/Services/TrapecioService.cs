@@ -33,5 +33,9 @@ namespace MiAreaVol.Services
             _trapecios.Remove(t);
             return true;
         }
+        public IEnumerable<Trapecio> GetPaged(int pageNumber, int pageSize)
+        {
+            return _trapecios.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
     }
 } 

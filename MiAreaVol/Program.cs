@@ -52,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IVolumenService, VolumenService>();
 builder.Services.AddScoped<IDataSeederService, DataSeederService>();
+builder.Services.AddScoped<CilindroService>();
 
 // Configurar Swagger
 builder.Services.AddEndpointsApiExplorer();

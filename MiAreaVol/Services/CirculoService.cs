@@ -31,5 +31,9 @@ namespace MiAreaVol.Services
             _circulos.Remove(c);
             return true;
         }
+        public IEnumerable<Circulo> GetPaged(int pageNumber, int pageSize)
+        {
+            return _circulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
     }
 } 

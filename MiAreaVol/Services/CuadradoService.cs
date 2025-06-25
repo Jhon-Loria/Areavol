@@ -31,5 +31,9 @@ namespace MiAreaVol.Services
             _cuadrados.Remove(c);
             return true;
         }
+        public IEnumerable<Cuadrado> GetPaged(int pageNumber, int pageSize)
+        {
+            return _cuadrados.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
     }
 } 

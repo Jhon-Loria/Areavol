@@ -12,6 +12,11 @@ public class MiAreaVolContext : DbContext
     public DbSet<CalculoArea> CalculosArea { get; set; }
     public DbSet<CalculoVolumen> CalculosVolumen { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Circulo> Circulos { get; set; }
+    public DbSet<Cuadrado> Cuadrados { get; set; }
+    public DbSet<Rectangulo> Rectangulos { get; set; }
+    public DbSet<Triangulo> Triangulos { get; set; }
+    public DbSet<Trapecio> Trapecios { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,5 +52,11 @@ public class MiAreaVolContext : DbContext
             entity.Property(e => e.Password).IsRequired();
             entity.ToTable("Users");
         });
+
+        modelBuilder.Entity<Circulo>().ToTable("Circulos");
+        modelBuilder.Entity<Cuadrado>().ToTable("Cuadrados");
+        modelBuilder.Entity<Rectangulo>().ToTable("Rectangulos");
+        modelBuilder.Entity<Triangulo>().ToTable("Triangulos");
+        modelBuilder.Entity<Trapecio>().ToTable("Trapecios");
     }
 } 
