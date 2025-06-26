@@ -53,6 +53,11 @@ builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IVolumenService, VolumenService>();
 builder.Services.AddScoped<IDataSeederService, DataSeederService>();
 builder.Services.AddScoped<CilindroService>();
+builder.Services.AddScoped<TrianguloService>();
+builder.Services.AddScoped<TrapecioService>();
+builder.Services.AddScoped<RectanguloService>();
+builder.Services.AddScoped<CuadradoService>();
+builder.Services.AddScoped<CirculoService>();
 
 // Configurar Swagger
 builder.Services.AddEndpointsApiExplorer();
