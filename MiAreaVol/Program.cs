@@ -132,6 +132,22 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
+// Middleware global de manejo de errores
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        var error = new { error = ex.Message, stackTrace = ex.StackTrace };
+        await context.Response.WriteAsJsonAsync(error);
+    }
+});
+
 app.UseHttpsRedirection();
 
 // Usar CORS
