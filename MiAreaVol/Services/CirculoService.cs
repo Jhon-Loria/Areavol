@@ -1,39 +1,46 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using MiAreaVol.Models;
+using MiAreaVol.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiAreaVol.Services
 {
     public class CirculoService
     {
-        private static List<Circulo> _circulos = new();
-        private static int _nextId = 1;
-
-        public IEnumerable<Circulo> GetAll() => _circulos;
-        public Circulo GetById(int id) => _circulos.FirstOrDefault(c => c.Id == id);
-        public Circulo Create(Circulo c)
+        private readonly MiAreaVolContext _context;
+        public CirculoService(MiAreaVolContext context)
         {
-            c.Id = _nextId++;
-            _circulos.Add(c);
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Circulo>> GetAllAsync() => await _context.Circulos.ToListAsync();
+        public async Task<Circulo?> GetByIdAsync(int id) => await _context.Circulos.FindAsync(id);
+        public async Task<Circulo> CreateAsync(Circulo c)
+        {
+            _context.Circulos.Add(c);
+            await _context.SaveChangesAsync();
             return c;
         }
-        public bool Update(int id, Circulo c)
+        public async Task<bool> UpdateAsync(int id, Circulo c)
         {
-            var existing = GetById(id);
+            var existing = await _context.Circulos.FindAsync(id);
             if (existing == null) return false;
             existing.Radio = c.Radio;
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var c = GetById(id);
+            var c = await _context.Circulos.FindAsync(id);
             if (c == null) return false;
-            _circulos.Remove(c);
+            _context.Circulos.Remove(c);
+            await _context.SaveChangesAsync();
             return true;
         }
         public IEnumerable<Circulo> GetPaged(int pageNumber, int pageSize)
         {
-            return _circulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return _context.Circulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
 } 

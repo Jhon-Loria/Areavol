@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiAreaVol.Models;
 using MiAreaVol.Services;
+using System.Threading.Tasks;
 
 namespace MiAreaVol.Controllers
 {
@@ -13,13 +14,22 @@ namespace MiAreaVol.Controllers
         private readonly TrapecioService _service;
         public TrapecioController(TrapecioService service) => _service = service;
 
-        [HttpGet] public IActionResult Get() => Ok(_service.GetAll());
-        [HttpGet("{id}")] public IActionResult Get(int id)
-            => _service.GetById(id) is Trapecio t ? Ok(t) : NotFound();
-        [HttpPost] public IActionResult Post(Trapecio t) => Ok(_service.Create(t));
-        [HttpPut("{id}")] public IActionResult Put(int id, Trapecio t)
-            => _service.Update(id, t) ? Ok() : NotFound();
-        [HttpDelete("{id}")] public IActionResult Delete(int id)
-            => _service.Delete(id) ? Ok() : NotFound();
+        [HttpGet]
+        public async Task<IActionResult> Get() => Ok(await _service.GetAllAsync());
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+            => await _service.GetByIdAsync(id) is Trapecio t ? Ok(t) : NotFound();
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Trapecio t) => Ok(await _service.CreateAsync(t));
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] Trapecio t)
+            => await _service.UpdateAsync(id, t) ? Ok() : NotFound();
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+            => await _service.DeleteAsync(id) ? Ok() : NotFound();
     }
 } 

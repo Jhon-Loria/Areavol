@@ -1,41 +1,48 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using MiAreaVol.Models;
+using MiAreaVol.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiAreaVol.Services
 {
     public class TrapecioService
     {
-        private static List<Trapecio> _trapecios = new();
-        private static int _nextId = 1;
-
-        public IEnumerable<Trapecio> GetAll() => _trapecios;
-        public Trapecio GetById(int id) => _trapecios.FirstOrDefault(t => t.Id == id);
-        public Trapecio Create(Trapecio t)
+        private readonly MiAreaVolContext _context;
+        public TrapecioService(MiAreaVolContext context)
         {
-            t.Id = _nextId++;
-            _trapecios.Add(t);
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Trapecio>> GetAllAsync() => await _context.Trapecios.ToListAsync();
+        public async Task<Trapecio?> GetByIdAsync(int id) => await _context.Trapecios.FindAsync(id);
+        public async Task<Trapecio> CreateAsync(Trapecio t)
+        {
+            _context.Trapecios.Add(t);
+            await _context.SaveChangesAsync();
             return t;
         }
-        public bool Update(int id, Trapecio t)
+        public async Task<bool> UpdateAsync(int id, Trapecio t)
         {
-            var existing = GetById(id);
+            var existing = await _context.Trapecios.FindAsync(id);
             if (existing == null) return false;
             existing.BaseMayor = t.BaseMayor;
             existing.BaseMenor = t.BaseMenor;
             existing.Altura = t.Altura;
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var t = GetById(id);
+            var t = await _context.Trapecios.FindAsync(id);
             if (t == null) return false;
-            _trapecios.Remove(t);
+            _context.Trapecios.Remove(t);
+            await _context.SaveChangesAsync();
             return true;
         }
         public IEnumerable<Trapecio> GetPaged(int pageNumber, int pageSize)
         {
-            return _trapecios.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return _context.Trapecios.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
 } 

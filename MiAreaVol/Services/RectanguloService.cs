@@ -1,40 +1,47 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using MiAreaVol.Models;
+using MiAreaVol.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiAreaVol.Services
 {
     public class RectanguloService
     {
-        private static List<Rectangulo> _rectangulos = new();
-        private static int _nextId = 1;
-
-        public IEnumerable<Rectangulo> GetAll() => _rectangulos;
-        public Rectangulo GetById(int id) => _rectangulos.FirstOrDefault(r => r.Id == id);
-        public Rectangulo Create(Rectangulo r)
+        private readonly MiAreaVolContext _context;
+        public RectanguloService(MiAreaVolContext context)
         {
-            r.Id = _nextId++;
-            _rectangulos.Add(r);
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Rectangulo>> GetAllAsync() => await _context.Rectangulos.ToListAsync();
+        public async Task<Rectangulo?> GetByIdAsync(int id) => await _context.Rectangulos.FindAsync(id);
+        public async Task<Rectangulo> CreateAsync(Rectangulo r)
+        {
+            _context.Rectangulos.Add(r);
+            await _context.SaveChangesAsync();
             return r;
         }
-        public bool Update(int id, Rectangulo r)
+        public async Task<bool> UpdateAsync(int id, Rectangulo r)
         {
-            var existing = GetById(id);
+            var existing = await _context.Rectangulos.FindAsync(id);
             if (existing == null) return false;
             existing.Largo = r.Largo;
             existing.Ancho = r.Ancho;
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var r = GetById(id);
+            var r = await _context.Rectangulos.FindAsync(id);
             if (r == null) return false;
-            _rectangulos.Remove(r);
+            _context.Rectangulos.Remove(r);
+            await _context.SaveChangesAsync();
             return true;
         }
         public IEnumerable<Rectangulo> GetPaged(int pageNumber, int pageSize)
         {
-            return _rectangulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return _context.Rectangulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
 } 

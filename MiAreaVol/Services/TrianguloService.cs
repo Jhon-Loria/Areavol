@@ -1,40 +1,47 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using MiAreaVol.Models;
+using MiAreaVol.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiAreaVol.Services
 {
     public class TrianguloService
     {
-        private static List<Triangulo> _triangulos = new();
-        private static int _nextId = 1;
-
-        public IEnumerable<Triangulo> GetAll() => _triangulos;
-        public Triangulo GetById(int id) => _triangulos.FirstOrDefault(t => t.Id == id);
-        public Triangulo Create(Triangulo t)
+        private readonly MiAreaVolContext _context;
+        public TrianguloService(MiAreaVolContext context)
         {
-            t.Id = _nextId++;
-            _triangulos.Add(t);
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Triangulo>> GetAllAsync() => await _context.Triangulos.ToListAsync();
+        public async Task<Triangulo?> GetByIdAsync(int id) => await _context.Triangulos.FindAsync(id);
+        public async Task<Triangulo> CreateAsync(Triangulo t)
+        {
+            _context.Triangulos.Add(t);
+            await _context.SaveChangesAsync();
             return t;
         }
-        public bool Update(int id, Triangulo t)
+        public async Task<bool> UpdateAsync(int id, Triangulo t)
         {
-            var existing = GetById(id);
+            var existing = await _context.Triangulos.FindAsync(id);
             if (existing == null) return false;
             existing.Base = t.Base;
             existing.Altura = t.Altura;
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var t = GetById(id);
+            var t = await _context.Triangulos.FindAsync(id);
             if (t == null) return false;
-            _triangulos.Remove(t);
+            _context.Triangulos.Remove(t);
+            await _context.SaveChangesAsync();
             return true;
         }
         public IEnumerable<Triangulo> GetPaged(int pageNumber, int pageSize)
         {
-            return _triangulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return _context.Triangulos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
 } 
