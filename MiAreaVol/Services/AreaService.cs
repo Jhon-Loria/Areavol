@@ -17,7 +17,9 @@ public class AreaService : IAreaService
 
     public async Task<CalculoResponse> CalcularAreaAsync(CalculoAreaRequest request)
     {
-        double resultado = CalcularArea(request.TipoFigura.ToLower(), request);
+        string tipoFiguraNormalizado = NormalizarFigura(request.TipoFigura);
+        ValidarParametrosArea(tipoFiguraNormalizado, request);
+        double resultado = CalcularArea(tipoFiguraNormalizado, request);
 
         var calculoArea = new CalculoArea
         {
@@ -155,4 +157,46 @@ public class AreaService : IAreaService
     private double CalcularAreaTriangulo(double base_, double altura) => (base_ * altura) / 2;
     private double CalcularAreaCirculo(double radio) => Math.PI * radio * radio;
     private double CalcularAreaTrapecio(double baseMayor, double altura, double baseMenor) => ((baseMayor + baseMenor) * altura) / 2;
+
+    private string NormalizarFigura(string tipoFigura)
+    {
+        if (string.IsNullOrWhiteSpace(tipoFigura)) return "";
+        var normalized = tipoFigura.ToLowerInvariant().Normalize(System.Text.NormalizationForm.FormD);
+        var sb = new System.Text.StringBuilder();
+        foreach (var c in normalized)
+        {
+            if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+                sb.Append(c);
+        }
+        return sb.ToString().Normalize(System.Text.NormalizationForm.FormC);
+    }
+
+    private void ValidarParametrosArea(string tipoFigura, CalculoAreaRequest request)
+    {
+        switch (tipoFigura)
+        {
+            case "cuadrado":
+                if (request.Lado == null)
+                    throw new ArgumentException("El parámetro 'lado' es obligatorio para un cuadrado.");
+                break;
+            case "rectangulo":
+                if (request.Largo == null || request.Ancho == null)
+                    throw new ArgumentException("Los parámetros 'largo' y 'ancho' son obligatorios para un rectángulo.");
+                break;
+            case "triangulo":
+                if (request.Base == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'base' y 'altura' son obligatorios para un triángulo.");
+                break;
+            case "circulo":
+                if (request.Radio == null)
+                    throw new ArgumentException("El parámetro 'radio' es obligatorio para un círculo.");
+                break;
+            case "trapecio":
+                if (request.Base == null || request.Lado == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'base', 'lado' y 'altura' son obligatorios para un trapecio.");
+                break;
+            default:
+                throw new ArgumentException($"Tipo de figura no soportado: {tipoFigura}");
+        }
+    }
 } 

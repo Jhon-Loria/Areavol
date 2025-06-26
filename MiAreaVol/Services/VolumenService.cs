@@ -17,7 +17,9 @@ public class VolumenService : IVolumenService
 
     public async Task<CalculoResponse> CalcularVolumenAsync(CalculoVolumenRequest request)
     {
-        double resultado = CalcularVolumen(request.TipoFigura.ToLower(), request);
+        string tipoFiguraNormalizado = NormalizarFigura(request.TipoFigura);
+        ValidarParametrosVolumen(tipoFiguraNormalizado, request);
+        double resultado = CalcularVolumen(tipoFiguraNormalizado, request);
 
         var calculoVolumen = new CalculoVolumen
         {
@@ -162,4 +164,54 @@ public class VolumenService : IVolumenService
     private double CalcularVolumenCono(double radio, double altura) => (1.0 / 3.0) * Math.PI * Math.Pow(radio, 2) * altura;
     private double CalcularVolumenParalelepipedo(double largo, double ancho, double altura) => largo * ancho * altura;
     private double CalcularVolumenPiramide(double base_, double altura) => (1.0 / 3.0) * base_ * altura;
+
+    private string NormalizarFigura(string tipoFigura)
+    {
+        if (string.IsNullOrWhiteSpace(tipoFigura)) return "";
+        var normalized = tipoFigura.ToLowerInvariant().Normalize(System.Text.NormalizationForm.FormD);
+        var sb = new System.Text.StringBuilder();
+        foreach (var c in normalized)
+        {
+            if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+                sb.Append(c);
+        }
+        return sb.ToString().Normalize(System.Text.NormalizationForm.FormC);
+    }
+
+    private void ValidarParametrosVolumen(string tipoFigura, CalculoVolumenRequest request)
+    {
+        switch (tipoFigura)
+        {
+            case "cubo":
+                if (request.Lado == null)
+                    throw new ArgumentException("El parámetro 'lado' es obligatorio para un cubo.");
+                break;
+            case "prisma":
+                if (request.Base == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'base' y 'altura' son obligatorios para un prisma.");
+                break;
+            case "cilindro":
+                if (request.Radio == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'radio' y 'altura' son obligatorios para un cilindro.");
+                break;
+            case "esfera":
+                if (request.Radio == null)
+                    throw new ArgumentException("El parámetro 'radio' es obligatorio para una esfera.");
+                break;
+            case "cono":
+                if (request.Radio == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'radio' y 'altura' son obligatorios para un cono.");
+                break;
+            case "paralelepipedo":
+                if (request.Largo == null || request.Ancho == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'largo', 'ancho' y 'altura' son obligatorios para un paralelepípedo.");
+                break;
+            case "piramide":
+                if (request.Base == null || request.Altura == null)
+                    throw new ArgumentException("Los parámetros 'base' y 'altura' son obligatorios para una pirámide.");
+                break;
+            default:
+                throw new ArgumentException($"Tipo de figura no soportado: {tipoFigura}");
+        }
+    }
 } 
